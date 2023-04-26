@@ -56,7 +56,7 @@ class PongGame:
         self.screen.blit(score_text, (SCREEN_WIDTH / 2 - score_text.get_width() / 2, 10))
         
     def move_right_paddle(self):
-        if random.randint(0, 1) == 0:
+        if random.randint(0, 9) >= 1:
             if self.right_paddle.centery < self.ball.centery:
                 self.right_paddle.top += 5
             elif self.right_paddle.centery > self.ball.centery:
@@ -82,12 +82,15 @@ class PongGame:
                 
             # Move the left paddle
             keys = pygame.key.get_pressed()
-            if keys[pygame.K_w]:
+            if keys[pygame.K_UP]:
                 self.left_paddle.top -= 5
-            elif keys[pygame.K_s]:
+            elif keys[pygame.K_DOWN]:
                 self.left_paddle.top += 5
             elif keys[pygame.K_x]:
                 game_over = True
+            elif keys[pygame.K_r]:
+                self.right_score = 0
+                self.left_score = 0
                 
             # Move the right paddle
             self.move_right_paddle()
@@ -115,7 +118,7 @@ class PongGame:
                 self.ball.top = SCREEN_HEIGHT / 2 - BALL_HEIGHT / 2
                 self.ball_x_speed = BALL_X_SPEED
                 self.ball_y_speed = BALL_Y_SPEED
-            elif self.ball.left >= SCREEN_WIDTH - BALL_WIDTH:
+            elif self.ball.left >= SCREEN_WIDTH - PADDLE_WIDTH:
                 self.left_score += 1
                 self.ball.left = SCREEN_WIDTH / 2 - BALL_WIDTH / 2
                 self.ball.top = SCREEN_HEIGHT / 2 - BALL_HEIGHT / 2
