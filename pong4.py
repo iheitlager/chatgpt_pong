@@ -122,11 +122,9 @@ class PongGame:
                 
             # Check if the ball has hit the left or right paddle
             if self.ball.colliderect(self.left_paddle):
-                # self.ball_x_speed = -self.ball_x_speed
                 self.ball_x_speed *= -1
                 self.update_paddle_color()
             elif self.ball.colliderect(self.right_paddle):
-                # self.ball_x_speed = -self.ball_x_speed
                 self.ball_x_speed *= -1
                 self.update_paddle_color()
                 
@@ -146,9 +144,6 @@ class PongGame:
             
             # Slow down the game
             self.clock.tick(FPS)
-
-
-
 
 
 if __name__ == '__main__':
