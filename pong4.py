@@ -21,6 +21,9 @@ BALL_HEIGHT = 15
 BALL_X_SPEED = 5
 BALL_Y_SPEED = 5
 
+# frames speed
+FPS = 30
+
 class PongGame:
     def __init__(self):
         pygame.init()
@@ -61,7 +64,13 @@ class PongGame:
                 self.right_paddle.top += 5
             elif self.right_paddle.centery > self.ball.centery:
                 self.right_paddle.top -= 5
-    
+
+    def reset_ball(self, direction=1):
+        self.ball.left = SCREEN_WIDTH / 2 - BALL_WIDTH / 2
+        self.ball.top = SCREEN_HEIGHT / 2 - BALL_HEIGHT / 2
+        self.ball_x_speed = direction*BALL_X_SPEED
+        self.ball_y_speed = BALL_Y_SPEED
+
     def draw_screen(self):
         # Draw the screen
         self.screen.fill(BLACK)
@@ -71,6 +80,14 @@ class PongGame:
 
     def update_paddle_color(self):
         self.paddle_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+
+    def flash_screen(self):
+        colors = [pygame.Color('red'), pygame.Color('green'), pygame.Color('blue')]
+
+        for color in colors:
+            self.screen.fill(color)
+            pygame.display.update()
+            self.clock.tick(FPS/4)
     
     def game_loop(self):
         game_over = False
@@ -105,32 +122,31 @@ class PongGame:
                 
             # Check if the ball has hit the left or right paddle
             if self.ball.colliderect(self.left_paddle):
-                self.ball_x_speed = -self.ball_x_speed
+                # self.ball_x_speed = -self.ball_x_speed
+                self.ball_x_speed *= -1
                 self.update_paddle_color()
             elif self.ball.colliderect(self.right_paddle):
-                self.ball_x_speed = -self.ball_x_speed
+                # self.ball_x_speed = -self.ball_x_speed
+                self.ball_x_speed *= -1
                 self.update_paddle_color()
                 
             # Check if the ball has gone off the left or right of the screen
             if self.ball.left <= 0:
                 self.right_score += 1
-                self.ball.left = SCREEN_WIDTH / 2 - BALL_WIDTH / 2
-                self.ball.top = SCREEN_HEIGHT / 2 - BALL_HEIGHT / 2
-                self.ball_x_speed = BALL_X_SPEED
-                self.ball_y_speed = BALL_Y_SPEED
+                self.flash_screen()
+                self.reset_ball(1)
             elif self.ball.left >= SCREEN_WIDTH - PADDLE_WIDTH:
                 self.left_score += 1
-                self.ball.left = SCREEN_WIDTH / 2 - BALL_WIDTH / 2
-                self.ball.top = SCREEN_HEIGHT / 2 - BALL_HEIGHT / 2
-                self.ball_x_speed = -BALL_X_SPEED
-                self.ball_y_speed = BALL_Y_SPEED
+                self.flash_screen()
+                self.reset_ball(-1)
                 
             self.draw_screen()
             self.print_score()
             pygame.display.update()
             
             # Slow down the game
-            self.clock.tick(30)
+            self.clock.tick(FPS)
+
 
 
 
